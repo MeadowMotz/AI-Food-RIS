@@ -1,0 +1,7 @@
+archive/
+archive_renamed/
+preprocessed_images/
+food_faiss.index
+meta_storage.pkl
+pca_model.pkl
+archive.zip
