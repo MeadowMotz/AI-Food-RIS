@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Reverse Image Search</title>
+    <style>
+        .center {
+            display: table;
+            margin-inline: auto;
+        }
+        .form-container {
+                display: flex;
+                flex-direction: column;  /* Aligns elements vertically */
+                align-items: center;     /* Centers the form elements horizontally */
+                gap: 10px;               /* Adds some space between the form elements */
+                margin-top: 20px;         /* Adds margin at the top */
+        }
+    </style>
+    <script>
+        document.querySelector("form").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent default form submission behavior
+            let formData = new FormData(this);  // Get the form data (including file)
+
+            fetch('/generate_image', {
+                method: 'POST',  // Use POST to submit the file
+                body: formData   // Send the file data
+            })
+            .then(response => {
+                console.log('Received response:', response);  // Log the response to debug
+                return response.blob();  // Expect an image response as a blob
+            })
+            .then(imageBlob => {
+                let imgElement = document.getElementById("dynamicImage");
+                imgElement.src = URL.createObjectURL(imageBlob);  // Display the generated image
+            })
+            .catch(error => {
+                console.error("Error:", error);  // Handle errors
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 class="center">Food Reverse Image Search</h1>
+    <form action="/generate_image" method="POST" enctype="multipart/form-data">
+        <input type="file" id="file" name="file">
+        <input type="submit" value="Search">
+    </form>      
+    <br/>
+    <img class="center" id="dynamicImage" src="" alt="Generated Image" width="300">
+</body>
+</html>
