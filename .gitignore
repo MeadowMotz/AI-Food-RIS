@@ -5,3 +5,8 @@ food_faiss.index
 meta_storage.pkl
 pca_model.pkl
 archive.zip
+static/images/
+uploads/
+modified_notebook.ipynb
+output_notebook.ipynb
+output.png
