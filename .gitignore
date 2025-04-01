@@ -1,7 +1,5 @@
-archive/
-archive_renamed/
-preprocessed_images/
-food_faiss.index
-meta_storage.pkl
-pca_model.pkl
-archive.zip
+data/preprocessed/
+data/raw/
+data/similar/
+fais/reset_faiss.index
+fais/resnet_meta.pkl
