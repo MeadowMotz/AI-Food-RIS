@@ -5,3 +5,5 @@ Reverse image search systems allow users to find similar images based on a given
 Develop a reverse image search system that indexes 10,000 food images using five traditional feature extraction methods. The system should preprocess images, extract features, create a FAISS index, and enable similarity searches to retrieve the top 10 similar images based on a query image.
 ## Checkpoint 2
 Enhance the reverse image search system by deploying it as a web service using FastAPI. This checkpoint leverages ResNet50 for feature extraction, providing a RESTful API endpoint that accepts an image and returns the top 10 similar food images.
+# Launch instructions
+Select and run the launch file for your system. It should start the server and open the website. If an error occurs, simply type "python server.py" in the command line while in this folder ("python3 server.py" for Mac/Linux), and copy the link next to "Running on".
