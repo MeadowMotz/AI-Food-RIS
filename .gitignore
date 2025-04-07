@@ -1,5 +1,6 @@
 data/preprocessed/
 data/raw/
 data/similar/
-fais/reset_faiss.index
-fais/resnet_meta.pkl
+faiss/reset_faiss.index
+faiss/resnet_meta.pkl
+faiss/features.npy
