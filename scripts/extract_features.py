@@ -44,6 +44,9 @@ def extract_features(image_dir, output_meta='../faiss/resnet_meta.pkl') -> np.nd
     Returns:
     numpy array: List containing the paths to all image files in image_dir and all of its subdirectories. 
     """
+    # Ensure the faiss directory exists before saving
+    os.makedirs(os.path.dirname(output_meta), exist_ok=True)
+
     feature_list = []
     meta_storage = {}
 
@@ -86,12 +89,16 @@ def collect_image_paths(image_dir) -> list:
     return image_paths
 
 if __name__ == "__main__":
-    image_directory = '../data/preprocessed'
-    output_features='../faiss/features.npy'
-    
+    image_directory = '../data/preprocessed/training'
+    output_features = '../faiss/features.npy'
+    output_meta = '../faiss/resnet_meta.pkl'
+
+    # Explicitly ensure 'faiss' directory exists before saving
+    os.makedirs(os.path.dirname(output_features), exist_ok=True)
+
     print("Extracting features...")
-    features = extract_features(image_directory)
-    
-    # Save features array
+    features = extract_features(image_directory, output_meta=output_meta)
+
+    # Save features array explicitly
     print("Saving features array...")
     np.save(output_features, features)

@@ -1,1 +1,9 @@
-# TODO
+opencv-python
+tensorflow
+numpy
+faiss-cpu
+scikit-image
+scikit-learn
+joblib
+matplotlib
+tqdm
