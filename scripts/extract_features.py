@@ -53,7 +53,7 @@ def extract_features(image_dir, output_meta='../faiss/resnet_meta.pkl') -> np.nd
     print("Extracting features from images...")
     image_paths = collect_image_paths(image_dir)
     idx = 0
-    for img_path in image_paths:
+    for img_path in tqdm(image_paths, desc="Extracting features"):
         if img_path.lower().endswith(('.jpg', '.png', '.jpeg')):
             feat = extract_resnet50_features(img_path)
             feature_list.append(feat)
@@ -89,7 +89,7 @@ def collect_image_paths(image_dir) -> list:
     return image_paths
 
 if __name__ == "__main__":
-    image_directory = '../data/1/preprocessed/training'
+    image_directory = '../data/preprocessed/1/training/'
     output_features = '../faiss/features.npy'
     output_meta = '../faiss/resnet_meta.pkl'
 

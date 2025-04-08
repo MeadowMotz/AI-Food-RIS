@@ -1,7 +1,7 @@
 data/preprocessed/
 data/raw/
 data/similar/
-faiss/reset_faiss.index
+faiss/food_faiss.index
 faiss/resnet_meta.pkl
 faiss/features.npy
 uploads/
