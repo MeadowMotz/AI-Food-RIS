@@ -89,16 +89,19 @@ def collect_image_paths(image_dir) -> list:
     return image_paths
 
 if __name__ == "__main__":
-    image_directory = '../data/preprocessed/training'
+    image_directory = '../data/1/preprocessed/training'
     output_features = '../faiss/features.npy'
     output_meta = '../faiss/resnet_meta.pkl'
 
     # Explicitly ensure 'faiss' directory exists before saving
     os.makedirs(os.path.dirname(output_features), exist_ok=True)
 
-    print("Extracting features...")
-    features = extract_features(image_directory, output_meta=output_meta)
+    if (not os.path.exists(output_features) or not os.path.exists(output_meta)):
+        print("Extracting features...")
+        features = extract_features(image_directory, output_meta=output_meta)
 
-    # Save features array explicitly
-    print("Saving features array...")
-    np.save(output_features, features)
+        # Save features array explicitly
+        print("Saving features array...")
+        np.save(output_features, features)
+    else:
+        print("Extracted features exist.")

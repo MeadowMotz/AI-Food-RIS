@@ -35,7 +35,10 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = os.path.abspath(os.path.join(script_dir, '..'))
     
-    input_directory = os.path.join(base_dir, 'data', 'raw', 'training')
-    output_directory = os.path.join(base_dir, 'data', 'preprocessed', 'training')
+    input_directory = os.path.join(base_dir, 'data', 'raw', '1', 'training')
+    output_directory = os.path.join(base_dir, 'data', 'preprocessed', '1', 'training')
 
-    preprocess_images(input_directory, output_directory)
+    if (len(os.listdir(output_directory)) == 0):
+        preprocess_images(input_directory, output_directory)
+    else:
+        print("Preprocessed images already exist.")
