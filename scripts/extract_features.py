@@ -27,7 +27,7 @@ def extract_resnet50_features(img_path):
     x = preprocess_input(x)
     
     # Extract features
-    features = model.predict(x)
+    features = model.predict(x, verbose=0)
     
     # Flatten the features to create a feature vector
     return features.flatten()

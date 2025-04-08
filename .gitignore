@@ -5,3 +5,4 @@ faiss/food_faiss.index
 faiss/resnet_meta.pkl
 faiss/features.npy
 uploads/
+scripts/__pycache__/
