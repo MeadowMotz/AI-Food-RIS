@@ -96,12 +96,9 @@ if __name__ == "__main__":
     # Explicitly ensure 'faiss' directory exists before saving
     os.makedirs(os.path.dirname(output_features), exist_ok=True)
 
-    if (not os.path.exists(output_features) or not os.path.exists(output_meta)):
-        print("Extracting features...")
-        features = extract_features(image_directory, output_meta=output_meta)
+    print("Extracting features...")
+    features = extract_features(image_directory, output_meta=output_meta)
 
-        # Save features array explicitly
-        print("Saving features array...")
-        np.save(output_features, features)
-    else:
-        print("Extracted features exist.")
+    # Save features array explicitly
+    print("Saving features array...")
+    np.save(output_features, features)

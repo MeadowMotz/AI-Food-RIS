@@ -5,12 +5,17 @@ Reverse image search systems allow users to find similar images based on a given
 Develop a reverse image search system that indexes 10,000 food images using five traditional feature extraction methods. The system should preprocess images, extract features, create a FAISS index, and enable similarity searches to retrieve the top 10 similar images based on a query image.
 ## Checkpoint 2
 Enhance the reverse image search system by deploying it as a web service using FastAPI. This checkpoint leverages ResNet50 for feature extraction, providing a RESTful API endpoint that accepts an image and returns the top 10 similar food images.
-The food image dataset can be downloaded from https://www.kaggle.com/datasets/trolukovich/food11-image-dataset.  Once downloaded, unzip archive.zip into AI-Food-RIS/data/raw/1.
 # Launch instructions
-Navigate to the scripts folder in your terminal and run the python scripts in the following order. 
+If this is the first time running these scripts, open a terminal and activate the virtual environment you wish to use.  Then, go to the AI-Food-RIS/ folder and execute the command:
+
+    pip install -r requirements.txt
+
+To process the images and generate the faiss index, navigate to the scripts folder in your terminal and run the python scripts in the following order. 
 1. download_dataset.py 
 2. preprocess.py
 3. extract_features.py
 4. build_index.py
 
-Or on Windows, run the batch file run.bat to do it automatically.
+Or on Windows, run the batch file run.bat to perform all steps automatically.
+
+To run the Food Reverse Image Search web page, go to the app folder and load site.html into your favorite browser.
