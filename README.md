@@ -16,6 +16,12 @@ To process the images and generate the faiss index, navigate to the scripts fold
 3. extract_features.py
 4. build_index.py
 
-Or on Windows, run the batch file run.bat to perform all steps automatically.
+- > Or on Windows, run the batch file run.bat to perform all steps automatically.
 
-To run the Food Reverse Image Search web page, go to the app folder and load site.html into your favorite browser.
+To run the Food Reverse Image Search web page, go to the root folder and run the following command:
+
+    python -m app.server
+
+Then ctrl+click on the link next to "running on."
+
+NOTE: Searching similar images/using website requires Python 3.10 !!!

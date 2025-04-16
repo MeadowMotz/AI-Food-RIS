@@ -8,3 +8,7 @@ joblib
 matplotlib
 tqdm
 kagglehub
+fastapi
+uvicorn
+pydantic
+python-multipart

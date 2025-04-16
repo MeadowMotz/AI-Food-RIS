@@ -14,16 +14,16 @@
         .center {
             display: flex;
             justify-content: center;
-            align-items: center; /* Added for vertical centering */
+            align-items: center;
         }
         .form-container {
-            margin-top: 2%; /* Adjusted margin */
+            margin-top: 2%;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align items to the top */
-            gap: 40px; /* Space between elements */
-            width: 80%; /* Limit width */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            align-items: flex-start;
+            gap: 40px;
+            width: 80%;
+            flex-wrap: wrap;
         }
         #drop-zone {
             border: 2px dashed #ccc;
@@ -32,13 +32,13 @@
             text-align: center;
             color: #888;
             cursor: pointer;
-            width: 250px; /* Fixed width */
-            height: 250px; /* Fixed height */
-            display: flex; /* Use flexbox for centering content */
-            flex-direction: column; /* Stack elements vertically */
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
-            overflow: hidden; /* Hide overflow if image is too big */
+            width: 250px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         #drop-zone.dragover {
             background-color: #f0f8ff;
@@ -48,23 +48,22 @@
         #preview {
             margin-top: 10px;
             max-width: 100%;
-            max-height: calc(100% - 30px); /* Adjust height based on text */
-            display: none; /* Hidden initially */
+            max-height: calc(100% - 30px);
+            display: none;
         }
         #submit-button {
-             margin-top: 20px; /* Add space above button */
+             margin-top: 20px;
              height: 30px;
         }
-        /* Style for the results container */
         #results-container {
-            margin-top: 30px; /* Space above results */
+            margin-top: 30px;
             padding: 10px;
-            width: 80%; /* Match form container width */
+            width: 80%;
             display: flex;
-            flex-wrap: wrap; /* Allow images to wrap */
-            justify-content: center; /* Center images */
-            gap: 15px; /* Space between images */
-            border-top: 1px solid #eee; /* Separator line */
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            border-top: 1px solid #eee;
         }
         .result-item {
             display: flex;
@@ -74,19 +73,15 @@
             font-size: 0.8em;
         }
         .result-item img {
-            width: 150px; /* Fixed width for result images */
-            height: 150px; /* Fixed height */
-            object-fit: cover; /* Crop images nicely */
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-bottom: 5px;
         }
-        /* Modal styles (mostly unchanged) */
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 60px; }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; }
         .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
         .close:hover, .close:focus { color: black; text-decoration: none; }
-        #logContent { max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: monospace; background-color: #f5f5f5; border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -111,84 +106,14 @@
         <p>Upload an image and click Search to see results.</p>
     </div>
 
-
-    <div id="logModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLogModal()">&times;</span>
-            <h3>Processing Log</h3>
-            <div id="logContent"></div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
     <script>
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const preview = document.getElementById('preview');
         const instructions = document.getElementById('instructions');
         const submitButton = document.getElementById('submit-button');
-        const resultsContainer = document.getElementById('results-container'); // Get results area
-        const logContent = document.getElementById('logContent');
-        const logModal = document.getElementById("logModal");
+        const resultsContainer = document.getElementById('results-container');
 
-        var socket = io.connect('http://' + document.domain + ':' + location.port); // Connect to server
-
-        socket.on('connect', function() {
-            console.log('Connected to server');
-        });
-
-        // --- Handle Log Messages ---
-        socket.on('log_message', function(data) {
-            if (logContent) {
-                 logContent.innerText += data.message + '\n';
-                 logContent.scrollTop = logContent.scrollHeight; // Auto-scroll
-            } else {
-                 console.error("logContent element not found");
-            }
-        });
-
-        // --- Handle Search Results ---
-        socket.on('search_results', function(data) {
-            console.log('Search results received:', data.results);
-            resultsContainer.innerHTML = ''; // Clear previous results
-
-            if (data.results && data.results.length > 0) {
-                data.results.forEach(result => {
-                    // Create container for image and score
-                    const itemDiv = document.createElement('div');
-                    itemDiv.classList.add('result-item');
-
-                    // Create image element
-                    const imgElement = document.createElement('img');
-                    // The backend should send URLs accessible by the browser (e.g., starting with /data/)
-                    imgElement.src = result.url;
-                    imgElement.alt = 'Similar food image';
-                    itemDiv.appendChild(imgElement); // Add image to item div
-
-                    // Create score element
-                    const scoreElement = document.createElement('p');
-                    scoreElement.textContent = `Score: ${result.score.toFixed(4)}`; // Display score
-                    itemDiv.appendChild(scoreElement); // Add score to item div
-
-                    resultsContainer.appendChild(itemDiv); // Add item to results container
-                });
-            } else {
-                resultsContainer.innerHTML = '<p>No similar images found.</p>';
-            }
-             // Optional: Auto-close log modal after receiving results
-             // setTimeout(() => closeLogModal(), 1000);
-        });
-
-        // --- Log Modal Functions ---
-        function openLogModal() {
-             logContent.innerText = ""; // Clear previous logs
-             logModal.style.display = "block";
-        }
-        function closeLogModal() {
-             logModal.style.display = "none";
-        }
-
-        // --- Drag and Drop / File Selection ---
         dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -206,7 +131,6 @@
         function handleFile(file) {
             if (!file || !file.type.startsWith('image/')) {
                 alert('Please select an image file.');
-                // Reset preview if invalid file
                 preview.style.display = 'none';
                 instructions.style.display = 'block';
                 return;
@@ -216,14 +140,13 @@
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
-                instructions.style.display = 'none'; // Hide instructions
+                instructions.style.display = 'none';
             };
             reader.readAsDataURL(file);
         }
 
-        // --- Handle Search Button Click ---
         submitButton.addEventListener("click", function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
 
             const file = fileInput.files[0];
             if (!file) {
@@ -231,49 +154,50 @@
                 return;
             }
 
-            // Clear previous results immediately
             resultsContainer.innerHTML = '<p>Searching...</p>';
 
             const formData = new FormData();
             formData.append('file', file);
 
-            // Open modal to show log
-            openLogModal();
-            logContent.innerText = "Uploading and processing...\n";
-
-            // Send file to backend using fetch
             fetch('/search', {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
-                 // Check if response is ok (status 200-299)
-                 if (!response.ok) {
-                      // Try to parse error message from server if available
-                      return response.json().then(errData => {
-                           throw new Error(errData.error || `HTTP error! status: ${response.status}`);
-                      }).catch(() => {
-                           // Fallback if no JSON error message
-                           throw new Error(`HTTP error! status: ${response.status}`);
-                      });
-                 }
-                 return response.json(); // Parse JSON response if successful
+                if (!response.ok) {
+                    return response.json().then(errData => {
+                        throw new Error(errData.detail || `HTTP error! status: ${response.status}`); 
+                    }).catch(() => {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    });
+                }
+                return response.json();
             })
             .then(data => {
-                 // Request was accepted by server, processing started.
-                 // Results will arrive via Socket.IO ('search_results' event)
-                 console.log('Server response:', data.message);
-                 logContent.innerText += data.message + "\n"; // Add server message to log
-                 logContent.scrollTop = logContent.scrollHeight;
-                 // We don't close the modal here anymore, wait for results event
+                resultsContainer.innerHTML = '';
+
+                if (data.results && data.results.length > 0) {
+                    data.results.forEach(result => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.classList.add('result-item');
+
+                        const imgElement = document.createElement('img');
+                        imgElement.src = result.url;  // This is where the image URL is set
+                        imgElement.alt = `Result image with score ${result.score}`;
+
+                        const scoreElement = document.createElement('div');
+                        scoreElement.textContent = `Score: ${result.score}`;
+
+                        itemDiv.appendChild(imgElement);
+                        itemDiv.appendChild(scoreElement);
+                        resultsContainer.appendChild(itemDiv);
+                    });
+                } else {
+                    resultsContainer.innerHTML = '<p>No results found.</p>';
+                }
             })
             .catch(error => {
-                 console.error('Error submitting search:', error);
-                 logContent.innerText += `Error: ${error.message}\n`;
-                 logContent.scrollTop = logContent.scrollHeight;
-                 resultsContainer.innerHTML = `<p>Error during search: ${error.message}</p>`; // Show error in results area too
-                 // Close modal after a delay on error
-                 // setTimeout(() => closeLogModal(), 5000);
+                resultsContainer.innerHTML = `<p>Error: ${error.message}</p>`;
             });
         });
     </script>
