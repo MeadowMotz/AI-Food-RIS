@@ -1,6 +1,5 @@
 import faiss
 import numpy as np
-import pickle
 import os
 
 def build_faiss_index(features, index_path='faiss/food_faiss.index'):

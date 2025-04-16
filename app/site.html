@@ -5,87 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Reverse Image Search</title>
     <style>
-        .center {
-            display: flex;
-            justify-content: center;
-        }
-        .form-container {
+        body {
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            margin-top: 20px;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Added for vertical centering */
         }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .progress-container {
-            width: 100%;
-            height: 20px;
-            background-color: #d1d1d1;
-            border-radius: 25px;
-            margin-top: 20px;
-        }
-        .progress-bar {
-            width: 0;
-            height: 100%;
-            background-color: #4caf50;
-            border-radius: 25px;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-        }
-        #dynamicImage {
-            display: none;
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 100%;
-            height: auto;
+        .form-container {
+            margin-top: 2%; /* Adjusted margin */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items to the top */
+            gap: 40px; /* Space between elements */
+            width: 80%; /* Limit width */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
         #drop-zone {
-            align-content: flex-start;
             border: 2px dashed #ccc;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
-            gap: 10px; 
-            align-items: center; 
             color: #888;
-            font-family: sans-serif;
             cursor: pointer;
-            display: inline-block; 
-            width: auto;
-            height: auto;
-            max-width: 50%;
+            width: 250px; /* Fixed width */
+            height: 250px; /* Fixed height */
+            display: flex; /* Use flexbox for centering content */
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            overflow: hidden; /* Hide overflow if image is too big */
         }
         #drop-zone.dragover {
             background-color: #f0f8ff;
@@ -93,43 +46,72 @@
             color: #3f51b5;
         }
         #preview {
-            margin-top: 15px;
+            margin-top: 10px;
             max-width: 100%;
-            height: auto;
-            display: none;
+            max-height: calc(100% - 30px); /* Adjust height based on text */
+            display: none; /* Hidden initially */
         }
-        #result {
-            max-width: 50vh;
+        #submit-button {
+             margin-top: 20px; /* Add space above button */
+             height: 30px;
         }
+        /* Style for the results container */
+        #results-container {
+            margin-top: 30px; /* Space above results */
+            padding: 10px;
+            width: 80%; /* Match form container width */
+            display: flex;
+            flex-wrap: wrap; /* Allow images to wrap */
+            justify-content: center; /* Center images */
+            gap: 15px; /* Space between images */
+            border-top: 1px solid #eee; /* Separator line */
+        }
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-size: 0.8em;
+        }
+        .result-item img {
+            width: 150px; /* Fixed width for result images */
+            height: 150px; /* Fixed height */
+            object-fit: cover; /* Crop images nicely */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        /* Modal styles (mostly unchanged) */
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 60px; }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover, .close:focus { color: black; text-decoration: none; }
+        #logContent { max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: monospace; background-color: #f5f5f5; border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1 class="center">Food Reverse Image Search</h1>
-    <form action="/search" method="POST" enctype="multipart/form-data" style="margin-top: 5%; display: flex; justify-content: center;">
-        <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 40px;">
-          
-          <div id="drop-zone" style="justify-self: end;">
+    <h1>Food Reverse Image Search</h1>
+
+    <div class="form-container">
+        <div id="drop-zone">
             <div id="instructions">
-              <p>Drag & drop an image here, or click to select</p>
+                <p>Drag & drop an image here,<br>or click to select</p>
             </div>
             <input type="file" id="file-input" name="file" accept="image/*" hidden>
-            <img id="preview" src="#" alt="Image preview" class="center">
-          </div>
-      
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <input id="submit-button" type="submit" value="Search" style="height: 30px;">
-          </div>
-      
-          <div style="justify-self: start;">
-            <img id="result" alt="Searched image">
-          </div>
-      
+            <img id="preview" src="#" alt="Image preview">
         </div>
-    </form>      
-    <br/>
-    <img class="form-container" id="dynamicImage" src="" alt="Generated Image">
 
-    <!-- Logs -->
+        <div>
+             <button id="submit-button" type="button" style="height: 30px;">Search</button>
+        </div>
+    </div>
+
+     <h2>Search Results</h2>
+    <div id="results-container">
+        <p>Upload an image and click Search to see results.</p>
+    </div>
+
+
     <div id="logModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeLogModal()">&times;</span>
@@ -143,56 +125,79 @@
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const preview = document.getElementById('preview');
-        var socket = io.connect('http://127.0.0.1:5000');
+        const instructions = document.getElementById('instructions');
+        const submitButton = document.getElementById('submit-button');
+        const resultsContainer = document.getElementById('results-container'); // Get results area
+        const logContent = document.getElementById('logContent');
+        const logModal = document.getElementById("logModal");
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port); // Connect to server
+
         socket.on('connect', function() {
             console.log('Connected to server');
         });
-    
+
+        // --- Handle Log Messages ---
         socket.on('log_message', function(data) {
-            document.getElementById("logContent").innerText += data.message + '\n';
+            if (logContent) {
+                 logContent.innerText += data.message + '\n';
+                 logContent.scrollTop = logContent.scrollHeight; // Auto-scroll
+            } else {
+                 console.error("logContent element not found");
+            }
         });
-    
-        socket.on('completed', function(data) {
-            document.getElementById("logContent").innerText += data.message + '\n';
-            // Show the image once processing is complete
-            var imageElement = document.getElementById("dynamicImage");
-            var timestamp = new Date().getTime();
-            imageElement.src = data.image_url + "?t=" + timestamp; // Append timestamp to avoid caching
-            imageElement.style.display = "block";  // Show the image
-            setTimeout(() => closeLogModal(), 3000);  // Close log modal after completion
+
+        // --- Handle Search Results ---
+        socket.on('search_results', function(data) {
+            console.log('Search results received:', data.results);
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            if (data.results && data.results.length > 0) {
+                data.results.forEach(result => {
+                    // Create container for image and score
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('result-item');
+
+                    // Create image element
+                    const imgElement = document.createElement('img');
+                    // The backend should send URLs accessible by the browser (e.g., starting with /data/)
+                    imgElement.src = result.url;
+                    imgElement.alt = 'Similar food image';
+                    itemDiv.appendChild(imgElement); // Add image to item div
+
+                    // Create score element
+                    const scoreElement = document.createElement('p');
+                    scoreElement.textContent = `Score: ${result.score.toFixed(4)}`; // Display score
+                    itemDiv.appendChild(scoreElement); // Add score to item div
+
+                    resultsContainer.appendChild(itemDiv); // Add item to results container
+                });
+            } else {
+                resultsContainer.innerHTML = '<p>No similar images found.</p>';
+            }
+             // Optional: Auto-close log modal after receiving results
+             // setTimeout(() => closeLogModal(), 1000);
         });
-    
+
+        // --- Log Modal Functions ---
         function openLogModal() {
-            const modal = document.getElementById("logModal");
-            modal.style.display = "block";  // Show modal
+             logContent.innerText = ""; // Clear previous logs
+             logModal.style.display = "block";
         }
-    
         function closeLogModal() {
-            document.getElementById("logModal").style.display = "none";
+             logModal.style.display = "none";
         }
 
-        // Open file dialog on click
+        // --- Drag and Drop / File Selection ---
         dropZone.addEventListener('click', () => fileInput.click());
-
-        // Handle drag events
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        // Handle drop
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
             handleFile(file);
         });
-
-        // Handle file selection
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
             handleFile(file);
@@ -201,6 +206,9 @@
         function handleFile(file) {
             if (!file || !file.type.startsWith('image/')) {
                 alert('Please select an image file.');
+                // Reset preview if invalid file
+                preview.style.display = 'none';
+                instructions.style.display = 'block';
                 return;
             }
 
@@ -208,51 +216,66 @@
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
-
-                // Hide instructions and show submit
-                document.getElementById('instructions').style.display = 'none';
-                document.getElementById('submit-button').style.display = 'block';
+                instructions.style.display = 'none'; // Hide instructions
             };
             reader.readAsDataURL(file);
         }
-    
-        document.querySelector("form").addEventListener("submit", function(event) {
-            event.preventDefault();  // Prevent default form submission
 
-            const file = document.getElementById("file-input").files[0];
+        // --- Handle Search Button Click ---
+        submitButton.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission
 
+            const file = fileInput.files[0];
             if (!file) {
-                alert("Please upload an image before submitting.");
+                alert("Please select an image file first.");
                 return;
             }
 
-            const formData = new FormData(this);
+            // Clear previous results immediately
+            resultsContainer.innerHTML = '<p>Searching...</p>';
+
+            const formData = new FormData();
+            formData.append('file', file);
 
             // Open modal to show log
             openLogModal();
-            document.getElementById("logContent").innerText = "Uploading and processing the file...\n";
+            logContent.innerText = "Uploading and processing...\n";
 
+            // Send file to backend using fetch
             fetch('/search', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                 // Check if response is ok (status 200-299)
+                 if (!response.ok) {
+                      // Try to parse error message from server if available
+                      return response.json().then(errData => {
+                           throw new Error(errData.error || `HTTP error! status: ${response.status}`);
+                      }).catch(() => {
+                           // Fallback if no JSON error message
+                           throw new Error(`HTTP error! status: ${response.status}`);
+                      });
+                 }
+                 return response.json(); // Parse JSON response if successful
+            })
             .then(data => {
-                if (data.image_url) {
-                    const timestamp = new Date().getTime();
-                    document.getElementById("dynamicImage").src = data.image_url + "?t=" + timestamp;
-                    document.getElementById("dynamicImage").style.display = "block";
-                } else {
-                    document.getElementById("logContent").innerText += "Error processing the image.\n";
-                }
-                document.getElementById("logContent").innerText += "Request processed.\n";
-                setTimeout(() => closeLogModal(), 5000);  
+                 // Request was accepted by server, processing started.
+                 // Results will arrive via Socket.IO ('search_results' event)
+                 console.log('Server response:', data.message);
+                 logContent.innerText += data.message + "\n"; // Add server message to log
+                 logContent.scrollTop = logContent.scrollHeight;
+                 // We don't close the modal here anymore, wait for results event
             })
             .catch(error => {
-                document.getElementById("logContent").innerText += `Error: ${error.message}\n`;
-                setTimeout(() => closeLogModal(), 10000); 
+                 console.error('Error submitting search:', error);
+                 logContent.innerText += `Error: ${error.message}\n`;
+                 logContent.scrollTop = logContent.scrollHeight;
+                 resultsContainer.innerHTML = `<p>Error during search: ${error.message}</p>`; // Show error in results area too
+                 // Close modal after a delay on error
+                 // setTimeout(() => closeLogModal(), 5000);
             });
         });
-    </script>    
+    </script>
 </body>
 </html>
