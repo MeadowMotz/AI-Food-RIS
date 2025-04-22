@@ -20,35 +20,15 @@
             margin-top: 2%;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             gap: 40px;
             width: 80%;
             flex-wrap: wrap;
         }
-        #drop-zone {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            color: #888;
-            cursor: pointer;
-            width: 250px;
-            height: 250px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        #drop-zone.dragover {
-            background-color: #f0f8ff;
-            border-color: #3f51b5;
-            color: #3f51b5;
-        }
         #preview {
             margin-top: 10px;
             max-width: 100%;
-            max-height: calc(100% - 30px);
+            max-height: 50%;
             display: none;
         }
         #submit-button {
@@ -88,41 +68,22 @@
     <h1>Food Reverse Image Search</h1>
 
     <div class="form-container">
-        <div id="drop-zone">
-            <div id="instructions">
-                <p>Drag & drop an image here,<br>or click to select</p>
-            </div>
-            <input type="file" id="file-input" name="file" accept="image/*" hidden>
-            <img id="preview" src="#" alt="Image preview">
-        </div>
-
-        <div>
-             <button id="submit-button" type="button" style="height: 30px;">Search</button>
-        </div>
+        <input type="file" id="file-input" name="file" accept="image/*"/>
+        <img id="preview" src="#" alt="Image preview"/>
+        <button id="submit-button" type="button">Search</button>
     </div>
 
-     <h2>Search Results</h2>
+    <h2>Search Results</h2>
     <div id="results-container">
         <p>Upload an image and click Search to see results.</p>
     </div>
 
     <script>
-        const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const preview = document.getElementById('preview');
-        const instructions = document.getElementById('instructions');
         const submitButton = document.getElementById('submit-button');
         const resultsContainer = document.getElementById('results-container');
 
-        dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            handleFile(file);
-        });
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
             handleFile(file);
@@ -132,7 +93,6 @@
             if (!file || !file.type.startsWith('image/')) {
                 alert('Please select an image file.');
                 preview.style.display = 'none';
-                instructions.style.display = 'block';
                 return;
             }
 
@@ -140,7 +100,6 @@
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
-                instructions.style.display = 'none';
             };
             reader.readAsDataURL(file);
         }
